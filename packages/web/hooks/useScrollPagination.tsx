@@ -206,13 +206,24 @@ export function useScrollPagination<
   const [data, setData] = useState<TData['list']>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, { setTrue, setFalse }] = useBoolean(false);
+  const isResetting = useRef(false);
   const isEmpty = total === 0 && !isLoading;
 
   const noMore = data.length >= total;
 
   const loadData = useLockFn(
     async (init = false, ScrollContainerRef?: RefObject<HTMLDivElement>) => {
-      if (noMore && !init) return;
+      if ((noMore && !init) || (init && isResetting.current)) return;
+
+      // 如果是初始加载，设置重置标志
+      if (init) {
+        isResetting.current = true;
+        if (ScrollContainerRef?.current) {
+          ScrollContainerRef.current.scrollTop = 0;
+        } else if (ScrollRef.current) {
+          ScrollRef.current.scrollTop = 0;
+        }
+      }
 
       const offset = init ? 0 : data.length;
 
@@ -226,6 +237,12 @@ export function useScrollPagination<
         } as TParams);
 
         setTotal(res.total);
+
+        if (init) {
+          setTimeout(() => {
+            isResetting.current = false;
+          }, 300);
+        }
 
         if (scrollLoadType === 'top') {
           const prevHeight = ScrollContainerRef?.current?.scrollHeight || 0;
@@ -288,7 +305,7 @@ export function useScrollPagination<
       // Watch scroll position
       useThrottleEffect(
         () => {
-          if (!ref?.current || noMore) return;
+          if (!ref?.current || noMore || isResetting.current) return;
           const { scrollTop, scrollHeight, clientHeight } = ref.current;
 
           if (
