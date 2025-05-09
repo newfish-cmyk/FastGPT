@@ -6,7 +6,6 @@ import type { FlowNodeTemplateType } from '@fastgpt/global/core/workflow/type/no
 import type { Edge, Node, XYPosition } from 'reactflow';
 import { moduleTemplatesFlat } from '@fastgpt/global/core/workflow/template/constants';
 import {
-  AppNodeTypes,
   EDGE_TYPE,
   FlowNodeInputTypeEnum,
   FlowNodeOutputTypeEnum,

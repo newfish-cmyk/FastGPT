@@ -16,7 +16,10 @@ import type { FlowNodeItemType } from '@fastgpt/global/core/workflow/type/node.d
 import { useTranslation } from 'next-i18next';
 import { useEditTitle } from '@/web/common/hooks/useEditTitle';
 import { useToast } from '@fastgpt/web/hooks/useToast';
-import { AppNodeTypes, FlowNodeTypeEnum } from '@fastgpt/global/core/workflow/node/constant';
+import {
+  AppTypeFlowNodeTypes,
+  FlowNodeTypeEnum
+} from '@fastgpt/global/core/workflow/node/constant';
 import { LOGO_ICON } from '@fastgpt/global/common/system/constants';
 import { ToolSourceHandle, ToolTargetHandle } from './Handle/ToolHandle';
 import { useEditTextarea } from '@fastgpt/web/hooks/useEditTextarea';
@@ -114,7 +117,7 @@ const NodeCard = (props: Props) => {
         return undefined;
       }
 
-      if (node && AppNodeTypes.includes(node.flowNodeType as any)) {
+      if (node && AppTypeFlowNodeTypes.includes(node.flowNodeType as any)) {
         return { ...node, ...node.pluginData };
       } else {
         const template = moduleTemplatesFlat.find(
@@ -619,7 +622,7 @@ const NodeVersion = React.memo(function NodeVersion({ nodeId }: { nodeId: string
       appId: node.pluginId
     },
     refreshDeps: [node.pluginId, node.flowNodeType, isOpen],
-    manual: !isOpen || !node.flowNodeType || !AppNodeTypes.includes(node.flowNodeType)
+    manual: !isOpen || !node.flowNodeType || !AppTypeFlowNodeTypes.includes(node.flowNodeType)
   });
 
   const { runAsync: onClickSyncVersion, loading: isLoadingSyncVersion } = useRequest2(

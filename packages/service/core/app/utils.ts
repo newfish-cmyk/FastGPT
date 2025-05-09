@@ -1,6 +1,9 @@
 import { MongoDataset } from '../dataset/schema';
 import { getEmbeddingModel } from '../ai/model';
-import { AppNodeTypes, FlowNodeTypeEnum } from '@fastgpt/global/core/workflow/node/constant';
+import {
+  AppTypeFlowNodeTypes,
+  FlowNodeTypeEnum
+} from '@fastgpt/global/core/workflow/node/constant';
 import { NodeInputKeyEnum } from '@fastgpt/global/core/workflow/constants';
 import type { StoreNodeItemType } from '@fastgpt/global/core/workflow/type/node';
 import { MongoAppVersion } from './version/schema';
@@ -36,7 +39,7 @@ export async function rewriteAppWorkflowToDetail({
 }) {
   const datasetIdSet = new Set<string>();
 
-  const appNodes = nodes.filter((node) => AppNodeTypes.includes(node.flowNodeType));
+  const appNodes = nodes.filter((node) => AppTypeFlowNodeTypes.includes(node.flowNodeType));
   const versionIds = appNodes.filter((node) => node.version).map((node) => node.version);
 
   if (versionIds.length > 0) {
