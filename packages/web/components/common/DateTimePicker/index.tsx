@@ -31,13 +31,17 @@ const DateTimePicker = ({
   );
   const [showSelected, setShowSelected] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [isPositioned, setIsPositioned] = useState(false);
 
   useEffect(() => {
     setSelectedDate(selectedDateTime);
   }, [selectedDateTime]);
 
   useEffect(() => {
-    if (!showSelected) return;
+    if (!showSelected) {
+      setIsPositioned(false);
+      return;
+    }
     const updatePosition = () => {
       const rect = containerRef.current?.getBoundingClientRect();
       const popoverRect = popoverRef.current?.getBoundingClientRect();
@@ -70,6 +74,7 @@ const DateTimePicker = ({
       left = Math.min(Math.max(left, padding), Math.max(padding, maxLeft));
 
       setPosition({ top, left });
+      setIsPositioned(true);
     };
 
     const raf = requestAnimationFrame(updatePosition);
@@ -137,6 +142,7 @@ const DateTimePicker = ({
             top={`${position.top}px`}
             left={`${position.left}px`}
             zIndex={1500}
+            visibility={isPositioned ? 'visible' : 'hidden'}
             css={{
               '--rdp-background-color': '#d6e8ff',
               '--rdp-accent-color': '#0000ff'
